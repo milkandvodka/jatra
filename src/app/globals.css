@@ -332,7 +332,7 @@ body:has(.ev-hero) .nav__count { background: var(--on-dark); color: var(--night)
 
 /* ================= Showcase: close-up with column card ================= */
 .show { position: relative; }
-.show__frame { position: relative; height: 100svh; min-height: 640px; overflow: clip; display: grid; align-items: center; }
+.show__frame { position: relative; height: 100svh; min-height: 560px; overflow: clip; display: grid; align-items: center; }
 .show__bg { position: absolute; inset: 0; }
 .show__bg img { width: 100%; height: 100%; object-fit: cover; }
 .show__card {
@@ -344,8 +344,11 @@ body:has(.ev-hero) .nav__count { background: var(--on-dark); color: var(--night)
 .show__card .meta { color: var(--on-dark-muted); font-size: var(--step-small); }
 .show__card .price { font-size: var(--step-body); font-weight: 600; }
 .show__desc { font-size: var(--step-small); line-height: 1.45; }
-.show__card figure { margin: 8px 0 4px; aspect-ratio: 3 / 2; overflow: clip; background: #222; }
-.show__card figure img { width: 100%; height: 100%; object-fit: cover; }
+/* the card never outgrows its frame: on short screens the small photo gives up height first */
+.show__card { max-height: calc(max(100svh, 560px) - 48px); }
+.show__card > * { flex-shrink: 0; }
+.show__card figure { position: relative; flex: 0 1 auto; min-height: 0; margin: 8px 0 4px; aspect-ratio: 3 / 2; overflow: clip; background: #222; }
+.show__card figure img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .show__card .btn { margin-top: auto; }
 .show__frame[data-col="2"] .show__card { margin-left: calc(var(--margin) + (100vw - 2 * var(--margin) - 3 * var(--gutter)) / 4 + var(--gutter)); }
 .show__frame[data-col="3"] .show__card { margin-left: calc(var(--margin) + 2 * ((100vw - 2 * var(--margin) - 3 * var(--gutter)) / 4 + var(--gutter))); }
@@ -422,7 +425,7 @@ body:has(.ev-hero) .nav__count { background: var(--on-dark); color: var(--night)
 .footer__links { grid-column: 10 / span 3; list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: var(--step-body); }
 .footer__legal { margin-top: auto; display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 48px var(--margin) 14px; font-size: var(--step-small); color: var(--on-dark-muted); position: relative; z-index: 1; }
 .footer__legal a { color: var(--on-dark); }
-.footer__mark { font-size: var(--step-mega); font-weight: 700; letter-spacing: -0.06em; line-height: 0.8; white-space: nowrap; padding-left: calc(var(--margin) - 0.06em); transform: translateY(26%); margin-bottom: -0.1em; user-select: none; }
+.footer__mark { font-size: var(--step-mega); font-weight: 700; letter-spacing: -0.06em; line-height: 0.8; white-space: nowrap; padding-left: calc(var(--margin) - 0.06em); padding-bottom: 0.08em; user-select: none; }
 
 /* ================= Reveals (shared) ================= */
 @media (prefers-reduced-motion: no-preference) {
