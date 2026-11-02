@@ -4,6 +4,7 @@ import Hero from "@/components/Hero";
 import Season from "@/components/Season";
 import ThisWeek from "@/components/ThisWeek";
 import Split from "@/components/Split";
+import Countdown from "@/components/Countdown";
 import { SEASON, addDays, dayOf, fromPrice, pic, sampleEvents, todayIST, weekday, when } from "@/lib/events";
 
 export const revalidate = 3600;
@@ -28,7 +29,7 @@ const hostBlocks = [
 
 const faqs = [
   ["Do I need an account?", "No. Tickets you book and events you host are saved in this browser. Clear your browser data and they go with it."],
-  ["Is the payment real?", "No. Jatra is a demonstration, so checkout asks for a name and an email and nothing else. No card, no UPI."],
+  ["Is the payment real?", "No. Jatra is a demonstration, so checkout asks for your name, email and phone number and nothing else. No card, no UPI."],
   ["Can I cancel a booking?", "Yes. Open My tickets and choose Cancel booking. The seats go back on sale at once."],
   ["How do I get in on the day?", "Show the QR code on your ticket at the gate. If the scanner is down, the host can type the code printed under it."],
   ["Can my college club host here?", "Yes. Anyone can list an event: clubs, venues, collectives, a group of friends with a speaker. Listing is free."],
@@ -68,6 +69,8 @@ export default function Home() {
                   <br />
                   {e.venue}
                 </p>
+                <p className="show__desc">{e.summary}</p>
+                <Countdown start={e.start} end={e.end} />
                 <p className="price num">{fromPrice(e)}</p>
                 <figure>
                   <Image src={s.small.src} alt={s.small.alt} width={s.small.w} height={s.small.h} sizes="(min-width: 901px) 20vw, 96px" />

@@ -18,6 +18,8 @@ The pinned poster (taste-skill seed 812209479): something holds still while ever
 | Field | `--field-red` | `#a12a1e` | The host chapter, sampled from Pipili appliqué |
 | On dark | `--on-dark` | `#dedad3` | Ink on photographs, red, teal and black fields |
 
+**Dark theme** (`:root[data-theme="dark"]`): ground `#121110`, surfaces `#1d1b19` / `#292623`, ink `#e6e2da`, muted `#a8a196` (7:1), danger `#ec7f70`. Teal and appliqué red stay. Blocks that are black in both themes (footer, ticket, menu, featured card) use `--night`.
+
 Chapters change the whole field (putty, film, photographs, red, surface, teal, black) with hard cuts, never fades.
 
 ## Type

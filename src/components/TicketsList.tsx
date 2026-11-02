@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Countdown from "./Countdown";
 import Ticket from "./Ticket";
 import { toast } from "./Toast";
 import { cancelBooking, downloadIcs, useBookings, useHydrated } from "@/lib/store";
@@ -37,6 +38,7 @@ export default function TicketsList() {
         <li key={b.code} id={b.code} data-reveal="" style={focus === b.code ? { outline: "3px solid var(--accent)", outlineOffset: 6 } : undefined}>
           <Ticket b={b} />
           <div className="ticket-actions">
+            <Countdown start={b.event.start} end={b.event.end} />
             <button type="button" className="link" onClick={() => downloadIcs(b.event, b.slug)}>
               Add to calendar
             </button>

@@ -10,13 +10,38 @@ An event management website for one city. Visitors find events in Bhubaneswar, b
 
 ---
 
+## The brief, point by point
+
+Built for **K Explore: Web Designing**, *Design and Develop a Responsive Event Management Website*.
+
+| The brief asks for | Where it is |
+| --- | --- |
+| An attractive hero section introducing the platform | Home: the torana-shaped window onto a film of the city that opens to full screen as you scroll ([Hero.tsx](src/components/Hero.tsx)) |
+| A section showcasing upcoming and featured events | Home: **This season** (featured, the procession), **This week** (upcoming, by day) and **Coming up** (two featured close-ups) |
+| Event cards with name, date, venue, image and a short description | Every poster card on [/events](https://jatra-bhubaneswar.vercel.app/events) and under each event ([Poster.tsx](src/components/Poster.tsx)); the featured cards on the home page |
+| Browse, search, and filter by category | [/events](https://jatra-bhubaneswar.vercel.app/events): search box, category chips, plus date, area, price and sort ([Browse.tsx](src/components/Browse.tsx)) |
+| Event details with a registration option | Each event page: summary, programme, schedule, venue, host, tickets and a **Book** button ([EventView.tsx](src/components/EventView.tsx)) |
+| Registration form: name, email, phone number and selected event | The booking dialog has the **Event** (filled in from the page you are on), **Name**, **Email** and **Phone number** |
+| JavaScript form validation | Name (at least 2 characters), email (pattern), phone (Indian mobile: 10 digits starting 6 to 9, optional +91 or 0). Errors appear under each field, focus moves to the first one, and each clears as it is fixed. The host form validates too, with an error summary |
+| A confirmation message after submitting | "You're going", the line *Booking confirmed, {name}…*, and the ticket printing in with its QR code |
+| Responsive on phones, tablets and desktops | Checked at 390, 768, 1280, 1440 and 1920px; each home section has its own phone layout |
+| HTML5, CSS3, JavaScript (React and Tailwind allowed) | Semantic HTML5 (landmarks, `<dialog>`, `<details>`, `<time>`), one hand-written CSS3 stylesheet, and React through Next.js, written in TypeScript (compiled to JavaScript), with Tailwind for the reset |
+| Git and GitHub | This repository |
+| **Bonus:** dark/light mode | The half-circle button in the header. It follows the system setting until you choose, remembers your choice, and the new theme wipes down over the old one |
+| **Bonus:** event countdown timers | Live day/hour/minute/second countdown on every event page, on the featured cards on the home page, and on each ticket in My tickets |
+| **Bonus:** animations | See [Motion](#motion) below |
+| **Bonus:** localStorage registration data | Bookings (with name, email and phone) and hosted events are saved in `localStorage` ([store.ts](src/lib/store.ts)); see them under My tickets and Your events |
+| Deployed link and README | https://jatra-bhubaneswar.vercel.app on Vercel, and this file |
+
 ## What you can do
 
 **As an attendee**
 
 - Browse every event over the next three weeks. Search, then filter by category, date (today, this weekend, next 7 or 30 days), area and price, and sort by date or price. Filters live in the URL, so a filtered view can be shared.
 - Open an event: summary, programme, schedule, venue with a Google Maps link, host, and "good to know" notes.
-- Book: pick quantities per ticket tier (seats left update live), confirm with a name and email, and the ticket "prints" with a scannable QR code and a ticket code.
+- Book: pick quantities per ticket tier (seats left update live), register with your name, email and phone number (validated as you type), and the ticket "prints" with a scannable QR code, a ticket code and a confirmation message.
+- A live countdown to the start of every event.
+- Light and dark themes, following your system until you pick one.
 - My tickets: every booking with its QR code, *Add to calendar* (.ics), *View event*, and *Cancel booking*. Cancelling returns the seats.
 - Share an event (native share sheet on phones, copy link on desktop).
 
@@ -28,7 +53,7 @@ An event management website for one city. Visitors find events in Bhubaneswar, b
 - Your events dashboard: events listed, tickets sold, takings, a sold/capacity bar per event, and *View*, *Edit* and *Delete* (with confirmation).
 - Published events appear straight away in the browse list, search, filters and booking flow.
 
-> **Demo scope.** There is no backend: bookings and hosted events are saved in the visitor's browser (`localStorage`). Checkout is a free demo and takes no payment. The sample events, venues' programmes and hosts are fictional, and their dates are generated relative to today so the listings never go stale.
+> **Demo scope.** There is no backend: bookings and hosted events are saved in the visitor's browser (`localStorage`). Checkout is a free demo and takes no payment, and nothing you enter leaves the browser. The sample events, venues' programmes and hosts are fictional, and their dates are generated relative to today so the listings never go stale.
 
 ## Screens
 
@@ -44,6 +69,8 @@ An event management website for one city. Visitors find events in Bhubaneswar, b
 | **Booking:** the ticket prints with its QR code. | **Hosting:** inline validation and a live poster preview. |
 | ![Organizer dashboard](docs/screens/dashboard.jpg) | ![Phone layouts](docs/screens/mobile.jpg) |
 | **Dashboard:** what is listed, what has sold. | **On a phone:** each section has its own phone composition. |
+| ![Registration form with validation errors](docs/screens/register.jpg) | ![The home page in the dark theme](docs/screens/dark.jpg) |
+| **Registration:** event, name, email and phone, each validated. | **Dark theme:** the Old Town after sunset. |
 
 ## The design
 
@@ -51,7 +78,7 @@ The brief was an event site, so the identity comes from the city rather than fro
 
 - **Idea.** *Jatra* means procession. On the home page the title "This season" holds still while the season's events pass by sideways, the way a procession passes someone standing at the roadside.
 - **First screen.** A window shaped like the Mukteswar *torana* (the tenth-century stone arch in the Old Town) shows a film of Odissi dancers among the temples. As you scroll, the arch opens to fill the screen, then the next section slides over it.
-- **Palette.** Putty (`#dedad3`), the colour of the Old Town's sandstone, with black ink and a single teal (`#256f82`) for the main action. The host section takes a red sampled from Pipili appliqué cloth (`#a12a1e`).
+- **Palette.** Putty (`#dedad3`), the colour of the Old Town's sandstone, with black ink and a single teal (`#256f82`) for the main action. The host section takes a red sampled from Pipili appliqué cloth (`#a12a1e`). The dark theme swaps ground and ink (`#121110` and `#e6e2da`) and keeps the teal and red.
 - **Type.** One family, General Sans, set very large against plain 19px text. The name also appears in Odia script (Noto Sans Oriya).
 - **Pictures.** Real photographs and film of Bhubaneswar and Odisha (temples, Odissi, Gotipua, Pipili appliqué, Pattachitra, Raghurajpur, Kalinga Stadium, Boita Bandana boats), all from Wikimedia Commons and credited on [/credits](https://jatra-bhubaneswar.vercel.app/credits).
 - **House rules.** No gradients (except neutral scrims over photos), no glass, no shadows on things at rest, no eyebrow labels, no icon-card grids, no hairline dividers, square corners throughout and the arch as the one curve.
@@ -69,6 +96,8 @@ The full token sheet is in [DESIGN.md](DESIGN.md).
 | Pictures | Shutter reveals (clip-path) and a slight scale settle, once, on entry |
 | Lists | Motion (`motion/react`) layout animations when filters change |
 | Booking | Native `<dialog>` with `@starting-style` entry; the ticket prints in with a clip-path |
+| Countdown | Each digit rolls in as it changes |
+| Theme switch | View Transitions API: the new theme wipes down over the old one |
 | Feedback | 0.97 press scale on every button, hover only on hover-capable pointers |
 | Smoothness | Lenis smooth scroll on mouse and trackpad only, off for touch |
 
@@ -78,6 +107,7 @@ Every hidden state lives inside `prefers-reduced-motion: no-preference`. With re
 
 - **Next.js 16** (App Router, React 19, TypeScript), deployed on **Vercel**.
 - **Rendering:** every route is static. The home, browse and event pages use ISR (`revalidate = 3600`) because the sample events are dated relative to today in IST. Event pages are pre-generated with `generateStaticParams`. An organizer's own events are not on the server, so the event page looks them up in the browser that created them.
+- **Theme:** a small script in `<head>` sets `data-theme` before the first paint (saved choice, else the system setting), so there is no flash. Dark tokens override the light ones under `:root[data-theme="dark"]`.
 - **State:** `src/lib/store.ts` wraps `localStorage` in `useSyncExternalStore`. The server snapshot is empty and the client snapshot is cached by raw string, so hydration is stable and every tab stays in sync (it also listens to the `storage` event).
 - **Dates:** everything is formatted with `Intl.DateTimeFormat` in `Asia/Kolkata`, so the server and the browser agree.
 - **Tickets:** codes come from `crypto.getRandomValues`. QR codes are SVG from `qrcode` and encode a link to the ticket. Calendar files are generated client-side.
@@ -88,7 +118,8 @@ Every hidden state lives inside `prefers-reduced-motion: no-preference`. With re
 src/
   app/            routes: / · /events · /events/[slug] · /tickets · /host · /host/new · /credits
   components/     Hero, Season (procession), ThisWeek, Browse, EventView, HostForm, Dashboard,
-                  TicketsList, Ticket, Poster, Header, Footer, Motion (Lenis + reveals), Split, Toast
+                  TicketsList, Ticket, Poster, Countdown, Header (+ theme toggle), Footer,
+                  Motion (Lenis + reveals), Split, Toast
   lib/            events.ts (types, sample data, IST formatting), store.ts (localStorage), media.json (credits)
 public/img        photographs (+ opt/ WebP variants), public/media: the hero film (WebM + MP4) and its poster
 ```

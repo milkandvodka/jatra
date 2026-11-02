@@ -29,13 +29,21 @@ export const metadata: Metadata = {
   openGraph: { title: "Jatra: what's on in Bhubaneswar", description: "Find, book and host events in Bhubaneswar.", images: ["/media/city-poster.jpg"] },
 };
 
-export const viewport: Viewport = { themeColor: "#dedad3" };
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#dedad3" },
+    { media: "(prefers-color-scheme: dark)", color: "#121110" },
+  ],
+};
+
+// Before first paint: mark JS as on, and apply the saved theme (or the system's) so there is no flash.
+const boot = `document.documentElement.classList.add('js');try{var t=localStorage.getItem('jatra:theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${generalSans.variable} ${odia.variable}`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+        <script dangerouslySetInnerHTML={{ __html: boot }} />
       </head>
       <body>
         <a className="skip" href="#main">Skip to content</a>

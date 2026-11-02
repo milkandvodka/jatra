@@ -12,6 +12,8 @@ export type Booking = {
   total: number;
   name: string;
   email: string;
+  /** Absent on bookings made before the phone field existed. */
+  phone?: string;
   createdAt: string;
 };
 

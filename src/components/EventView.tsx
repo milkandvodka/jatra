@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import Countdown from "./Countdown";
 import Poster from "./Poster";
 import Ticket from "./Ticket";
 import { toast } from "./Toast";
@@ -11,6 +12,22 @@ import { addBooking, bookedByTier, downloadIcs, ticketCode, useBookings, useHydr
 
 const MAX_PER_TIER = 6;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+/** An Indian mobile number: optional +91 or 0, then ten digits starting 6 to 9. Spaces and dashes are ignored. */
+const PHONE = /^(?:\+?91|0)?[6-9]\d{9}$/;
+
+type Errors = Partial<Record<"name" | "email" | "phone", string>>;
+function validate(f: FormData) {
+  const v = {
+    name: String(f.get("name") ?? "").trim(),
+    email: String(f.get("email") ?? "").trim(),
+    phone: String(f.get("phone") ?? "").replace(/[\s-]/g, ""),
+  };
+  const errs: Errors = {};
+  if (v.name.length < 2) errs.name = "Enter the name to print on the ticket.";
+  if (!EMAIL.test(v.email)) errs.email = "Enter an email address like name@example.com.";
+  if (!PHONE.test(v.phone)) errs.phone = "Enter a 10-digit mobile number, like 98765 43210.";
+  return { v, errs };
+}
 
 export default function EventView({ initial, slug, more }: { initial: EventItem | null; slug: string; more: EventItem[] }) {
   const mine = useUserEvents();
@@ -52,7 +69,7 @@ function EventPage({ e, more, ended }: { e: EventItem; more: EventItem[]; ended:
   const [qty, setQty] = useState<Record<string, number>>({});
   const dialog = useRef<HTMLDialogElement>(null);
   const [issued, setIssued] = useState<Booking | null>(null);
-  const [errors, setErrors] = useState<{ name?: string; email?: string }>({});
+  const [errors, setErrors] = useState<Errors>({});
 
   const left = (t: EventItem["tiers"][number]) => Math.max(0, t.capacity - t.sold - (booked[t.id] ?? 0));
   const lines = e.tiers.filter((t) => (qty[t.id] ?? 0) > 0).map((t) => ({ tierId: t.id, name: t.name, price: t.price, qty: qty[t.id] }));
@@ -77,15 +94,11 @@ function EventPage({ e, more, ended }: { e: EventItem; more: EventItem[]; ended:
 
   const confirm = (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
-    const f = new FormData(ev.currentTarget);
-    const name = String(f.get("name") ?? "").trim();
-    const email = String(f.get("email") ?? "").trim();
-    const errs: typeof errors = {};
-    if (name.length < 2) errs.name = "Enter the name to print on the ticket.";
-    if (!EMAIL.test(email)) errs.email = "Enter an email address like name@example.com.";
+    const { v, errs } = validate(new FormData(ev.currentTarget));
     setErrors(errs);
-    if (errs.name || errs.email) {
-      (ev.currentTarget.elements.namedItem(errs.name ? "name" : "email") as HTMLInputElement).focus();
+    const first = (["name", "email", "phone"] as const).find((k) => errs[k]);
+    if (first) {
+      (ev.currentTarget.elements.namedItem(first) as HTMLInputElement).focus();
       return;
     }
     const b: Booking = {
@@ -94,8 +107,9 @@ function EventPage({ e, more, ended }: { e: EventItem; more: EventItem[]; ended:
       event: { title: e.title, start: e.start, end: e.end, venue: e.venue, address: e.address, image: e.image },
       lines,
       total,
-      name,
-      email,
+      name: v.name,
+      email: v.email,
+      phone: v.phone,
       createdAt: new Date().toISOString(),
     };
     addBooking(b);
@@ -205,6 +219,7 @@ function EventPage({ e, more, ended }: { e: EventItem; more: EventItem[]; ended:
               <p>This event has ended.</p>
             ) : (
               <>
+                <Countdown start={e.start} end={e.end} blocks />
                 <div>
                   {e.tiers.map((t) => {
                     const l = left(t);
@@ -284,7 +299,9 @@ function EventPage({ e, more, ended }: { e: EventItem; more: EventItem[]; ended:
           {issued ? (
             <>
               <Ticket b={issued} print />
-              <p className="small muted">Saved to My tickets in this browser. Show the QR code at the gate.</p>
+              <p className="confirm-msg" role="status">
+                Booking confirmed, {issued.name}. Your ticket is saved in My tickets on this browser. Show the QR code at the gate.
+              </p>
               <div className="ticket-actions">
                 <button type="button" className="btn btn--ink" onClick={() => downloadIcs(issued.event, issued.slug)}>
                   Add to calendar
@@ -295,13 +312,20 @@ function EventPage({ e, more, ended }: { e: EventItem; more: EventItem[]; ended:
               </div>
             </>
           ) : (
-            <form onSubmit={confirm} noValidate style={{ display: "grid", gap: 18 }}>
-              <div>
-                <p style={{ fontWeight: 600 }}>{e.title}</p>
-                <p className="small muted">
+            <form
+              onSubmit={confirm}
+              // Once errors are showing, each one clears as its field is fixed.
+              onInput={(ev) => Object.keys(errors).length && setErrors(validate(new FormData(ev.currentTarget)).errs)}
+              noValidate
+              style={{ display: "grid", gap: 18 }}
+            >
+              <label className="field">
+                <span>Event</span>
+                <input className="input" name="event" value={e.title} readOnly aria-describedby="event-note" />
+                <small id="event-note">
                   {when(e)}, {e.venue}
-                </p>
-              </div>
+                </small>
+              </label>
               <ul className="summary-lines num">
                 {lines.map((l) => (
                   <li key={l.tierId}>
@@ -335,6 +359,15 @@ function EventPage({ e, more, ended }: { e: EventItem; more: EventItem[]; ended:
                 ) : (
                   <small id="email-note">Only stored in this browser. Nothing is sent.</small>
                 )}
+              </label>
+              <label className="field">
+                <span>Phone number</span>
+                <input className="input" name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="98765 43210" aria-invalid={!!errors.phone} aria-describedby={errors.phone ? "err-phone" : undefined} />
+                {errors.phone ? (
+                  <span className="err" id="err-phone">
+                    {errors.phone}
+                  </span>
+                ) : null}
               </label>
               <button type="submit" className="btn btn--full">
                 Confirm booking
