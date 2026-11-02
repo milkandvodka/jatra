@@ -163,6 +163,8 @@ body:has(.ev-hero) .nav__count { background: var(--on-dark); color: var(--ink); 
 .hero__title .line > span { display: block; }
 .hero__aside p { font-size: var(--step-body); line-height: 1.45; max-width: 27ch; }
 .hero__aside .btn { margin-top: 22px; }
+.hero__aside .hero__byline { margin-top: 16px; max-width: none; font-size: var(--step-small); line-height: 1.4; opacity: 0.85; }
+.hero__byline strong { font-weight: 600; }
 
 /* static and reduced-motion state: the picture is open, words over a scrim in its corner */
 .hero__copy {
@@ -195,23 +197,26 @@ body:has(.ev-hero) .nav__count { background: var(--on-dark); color: var(--ink); 
   .js .hero[data-scene] .hero__scrim { display: none; }
   .js .hero[data-scene] .hero__copy { inset: 0; color: var(--ink); display: block; pointer-events: none; }
   .js .hero[data-scene] .hero__copy > * { pointer-events: auto; }
-  .js .hero[data-scene] .hero__title { position: absolute; left: var(--margin); bottom: var(--gap-b); max-width: calc((100vw - var(--ww)) / 2 - var(--margin) - 24px); }
+  /* "Bhubaneswar" is about 6.5em wide: size the headline from the room left of the window so the mask never shaves it */
+  .js .hero[data-scene] .hero__title { position: absolute; left: var(--margin); bottom: var(--gap-b); font-size: min(var(--step-head), calc(((100vw - var(--ww)) / 2 - var(--margin) - 16px) / 6.5)); }
   .js .hero[data-scene] .hero__aside { position: absolute; right: var(--margin); bottom: var(--gap-b); width: min(22vw, 27ch); }
 
   /* first frame: lines rise, sentence and button arrive, the window wipes open, settled by 1.2s */
   .js .hero .hero__title .line > span { transform: translateY(105%); animation: rise-in 900ms var(--ease-expo) forwards; animation-delay: calc(100ms + var(--i) * 90ms); }
   .js .hero .hero__aside > * { opacity: 0; transform: translateY(12px); animation: fade-rise 500ms var(--ease-out) forwards; animation-delay: var(--d, 420ms); }
+  .js .hero .hero__aside > .hero__byline { animation-name: fade-rise-byline; }
+  @keyframes fade-rise-byline { to { opacity: 0.85; transform: none; } }
   .js .hero .hero__inner { clip-path: inset(100% 0 0 0); animation: wipe-open 1000ms var(--ease-in-out) 150ms forwards; }
 
   @media (max-width: 900px) {
     .js .hero[data-scene] {
-      --ww: min(78vw, calc((100svh - 340px) * 0.8));
+      --ww: min(78vw, calc((100svh - 380px) * 0.8));
       --t: 26%;
       --b: calc(74% - var(--wh));
       --gap-b: calc(74svh - var(--wh));
     }
-    .js .hero[data-scene] .hero__title { left: var(--margin); right: var(--margin); top: 84px; bottom: auto; max-width: none; }
-    .js .hero[data-scene] .hero__aside { left: var(--margin); right: var(--margin); top: calc(74svh + 16px); bottom: auto; width: auto; }
+    .js .hero[data-scene] .hero__title { left: var(--margin); right: var(--margin); top: 84px; bottom: auto; font-size: var(--step-head); }
+    .js .hero[data-scene] .hero__aside { left: var(--margin); right: var(--margin); top: calc(26svh + var(--wh) + 16px); bottom: auto; width: auto; }
     .js .hero[data-scene] .hero__aside p { max-width: 34ch; }
     .js .hero[data-scene] .hero__aside .btn { width: 100%; margin-top: 14px; }
   }

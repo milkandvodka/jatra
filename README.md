@@ -1,5 +1,7 @@
 # Jatra: what's on in Bhubaneswar
 
+**Subham Shah** · Roll No. **24155739**
+
 An event management website for one city. Visitors find events in Bhubaneswar, book tickets and carry a QR ticket. Organizers publish events, sell them in ticket tiers and track sales. *Jatra* (ଯାତ୍ରା) is Odia for a festival procession, and the site is built around that idea.
 
 **Live site:** https://jatra-bhubaneswar.vercel.app

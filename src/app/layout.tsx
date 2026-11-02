@@ -23,7 +23,9 @@ const odia = Noto_Sans_Oriya({ subsets: ["oriya"], weight: ["600"], variable: "-
 export const metadata: Metadata = {
   metadataBase: new URL("https://jatra-bhubaneswar.vercel.app"),
   title: { default: "Jatra: what's on in Bhubaneswar", template: "%s | Jatra" },
-  description: "Find, book and host events in Bhubaneswar: Odissi under temple arches, open mics, food walks, workshops, runs and festivals.",
+  description: "Find, book and host events in Bhubaneswar: Odissi under temple arches, open mics, food walks, workshops, runs and festivals. Designed and built by Subham Shah (Roll No. 24155739).",
+  authors: [{ name: "Subham Shah" }],
+  creator: "Subham Shah",
   openGraph: { title: "Jatra: what's on in Bhubaneswar", description: "Find, book and host events in Bhubaneswar.", images: ["/media/city-poster.jpg"] },
 };
 

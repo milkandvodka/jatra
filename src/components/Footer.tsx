@@ -25,7 +25,9 @@ export default function Footer() {
         </ul>
       </div>
       <div className="footer__legal">
-        <span>Jatra is a demo project. Sample events, hosts and bookings are fictional.</span>
+        <span>
+          Designed and built by Subham Shah, Roll No. 24155739. Jatra is a demo project; sample events, hosts and bookings are fictional.
+        </span>
         <span>
           Photographs and film by Wikimedia Commons contributors. <Link className="link" href="/credits">Credits</Link>
         </span>

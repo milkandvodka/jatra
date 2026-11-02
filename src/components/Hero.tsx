@@ -83,6 +83,9 @@ export default function Hero() {
             <Link href="/events" className="btn" style={{ ["--d" as string]: "480ms" }}>
               Find an event
             </Link>
+            <p className="hero__byline" style={{ ["--d" as string]: "560ms" }}>
+              Designed and built by <strong>Subham Shah</strong>, <span className="num">Roll No. 24155739</span>
+            </p>
           </div>
         </div>
       </div>
